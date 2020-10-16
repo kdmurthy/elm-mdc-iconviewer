@@ -14,14 +14,30 @@ div.gridcontainer {
   height: 100vh;
   display: grid;
   grid-gap: 1rem;
-  grid-template: repeat(auto-fit, 180px) / repeat(auto-fit, 180px) ;
+  grid-template: repeat(auto-fit, 130px) / repeat(auto-fit, 130px) ;
 }
 
 div.iconview {
   display: grid;
   place-items: center;
-  width: 180px;
-  height: 180px;
+  width: 130px;
+  height: 130px;
   overflow: hidden;
-  background: lightpink;
+  background: lightsteelblue;
+}
+
+div.iconitem {
+  padding:5px;
+  height: 40px;
+  width: 40px;
+  display: grid;
+  place-items: center;
+  background:#2a0361;
+  color:white;
+  border-radius:50%; 
+  box-shadow:  0 0 10px  rgba(0,0,0,0.6);
+}
+
+div.iconitem:hover {
+  background:#2a0361aa;
 }

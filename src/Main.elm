@@ -10,6 +10,7 @@ import Material.Fab as Fab
 import Utils.Icons as Icons
 import Utils.IconList exposing(..)
 import Html.Attributes exposing (style)
+import Material.Options exposing (css)
 
 ---- MODEL ----
 
@@ -48,14 +49,20 @@ view model =
 viewIcon: Model -> IconInfo -> Html Msg
 viewIcon model icon =
     div [ class "iconview" ]
-        [ fab icon model []
-        , Html.b [] [ text icon.name ]
+        [ iconitem icon
+        , Html.span [ style "font-size" "small" ] [ text icon.name ]
+        , Html.b [ style "font-size" "small" ] [ text icon.function ]
         , Html.i [] [ text icon.category ]
         ]
 
+iconitem : IconInfo -> Html msg
+iconitem icon =
+    div [ class "iconitem"] [ Icon.view [ Icon.size24 ] icon.name]
+
 fab : IconInfo -> Model -> List (Fab.Property Msg) -> Html Msg
 fab icon model options =
-    Fab.view Mdc icon.name model.mdc (Fab.mini :: Fab.ripple :: Fab.icon icon.name :: options) []
+    Fab.view Mdc icon.name model.mdc 
+        (Fab.ripple :: Fab.icon icon.name :: options) []
 ---- PROGRAM ----
 
 

@@ -10,7 +10,7 @@ EOF
     for i in $folder/*
     do
         iconName=$(basename $i | sed -e 's/^[0-9]/icon_&/')
-		icon=$(basename $i)
+        icon=$(basename $i)
         cat <<EOF >> Icons/$cat.elm
 $iconName : String
 $iconName = "$icon"
@@ -69,7 +69,7 @@ function iconentry() {
     do
         iconName=$(basename $i | sed -e 's/^[0-9]/icon_&/')
         cat <<EOF >> IconList.elm
-        { name = Icons.$iconName, category = "$category" },
+        { name = Icons.$iconName, function="$iconName", category = "$category" },
 EOF
     done
 }
@@ -81,6 +81,7 @@ import Utils.Icons as Icons
 
 type alias IconInfo =
     { name : String
+    , function: String
     , category : String
     }
 
@@ -91,9 +92,11 @@ EOF
 
 for i in ~/Projects/reference/material-design-icons/png/*
 do
-    iconentry $(basename $i | sed -e 's/./\U&/') $i
+    category=$(basename $i | sed -e 's/./\U&/')
+    iconentry $category $i
 done
 
 cat <<EOF  >> IconList.elm
+        { name = Icons.info, function="info", category = "LastOne" }
     ]
 EOF
