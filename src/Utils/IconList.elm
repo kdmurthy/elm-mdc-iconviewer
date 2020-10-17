@@ -1,4 +1,4 @@
-module Utils.IconList exposing(..)
+module Utils.IconList exposing(IconInfo, iconList, iconCategories)
 
 import Utils.Icons as Icons
 
@@ -1570,4 +1570,26 @@ iconList =
         { name = Icons.toggle_off, function="toggle_off", category = "Toggle" },
         { name = Icons.toggle_on, function="toggle_on", category = "Toggle" },
         { name = Icons.info, function="info", category = "LastOne" }
+    ]
+
+iconCategories: List ( String, String )
+iconCategories =
+    [ ( "All", "category")
+    , ("Action", "3d_rotation")
+    , ("Alert", "add_alert")
+    , ("Av", "10k")
+    , ("Communication", "add_ic_call")
+    , ("Content", "add")
+    , ("Device", "access_alarm")
+    , ("Editor", "add_chart")
+    , ("File", "approval")
+    , ("Hardware", "browser_not_supported")
+    , ("Home", "sensor_door")
+    , ("Image", "10mp")
+    , ("Maps", "360")
+    , ("Navigation", "app_settings_alt")
+    , ("Notification", "account_tree")
+    , ("Places", "ac_unit")
+    , ("Social", "6_ft_apart")
+    , ("Toggle", "check_box")
     ]

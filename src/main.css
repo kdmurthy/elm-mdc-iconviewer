@@ -14,9 +14,14 @@ body {
   margin: 0 auto;
 }
 
-div.gridcontainer {
+div.content {
   margin-top: 66px;
-  height: 90vh;
+  display: grid;
+  grid-template-columns: auto 1fr ;
+}
+
+div.icon-list {
+  height: calc(100vh - 66px);
   overflow-x: auto;
   overflow-y: scroll;
   display: grid;
@@ -24,7 +29,7 @@ div.gridcontainer {
   grid-template: repeat(auto-fit, 130px) / repeat(auto-fit, 130px) ;
 }
 
-div.iconview {
+div.icon-view {
   display: grid;
   place-items: center;
   width: 130px;
@@ -33,7 +38,7 @@ div.iconview {
   background: lightsteelblue;
 }
 
-div.iconitem {
+div.icon-item {
   padding:5px;
   height: 40px;
   width: 40px;
@@ -45,6 +50,10 @@ div.iconitem {
   box-shadow:  0 0 10px  rgba(0,0,0,0.6);
 }
 
-div.iconitem:hover {
+div.icon-item:hover {
   background:#2a0361aa;
+}
+
+.category-list {
+  height: calc(100vh - 130px) !important;
 }

@@ -1,19 +1,46 @@
-module Main exposing (..)
+module Main exposing (main)
 
+import Array
 import Browser
-import Html exposing (Html, br, div, h1, img, text)
-import Html.Attributes exposing (class, src, style)
-import Html.Lazy
+import Html exposing (Html, div, text)
+import Html.Attributes exposing (class, style)
 import InfiniteScroll exposing (Direction(..), infiniteScroll)
 import Material
-import Material.Fab as Fab
+import Material.Drawer.Permanent as Drawer
 import Material.Icon as Icon
-import Material.Options as Options exposing (cs, css, styled)
+import Material.List as Lists
+import Material.Options as Options exposing (cs, styled)
 import Material.TextField as TextField
 import Material.TopAppBar as TopAppBar
 import Task
-import Utils.IconList exposing (..)
+import Utils.IconList exposing (IconInfo, iconCategories, iconList)
 import Utils.Icons as Icons
+
+
+
+-- CONSTANTS --
+
+
+stepCount : Int
+stepCount =
+    150
+
+
+allCategories : String
+allCategories =
+    "All"
+
+
+
+-- MESSAGE --
+
+
+type Msg
+    = Mdc (Material.Msg Msg)
+    | InfiniteScrollMsg InfiniteScroll.Msg
+    | LoadMore
+    | FilterChanged String
+    | CategorySelected Int
 
 
 
@@ -23,15 +50,11 @@ import Utils.Icons as Icons
 type alias Model =
     { icons : List IconInfo
     , count : Int
-    , filter: String
+    , filter : String
+    , selectedCategory : String
     , mdc : Material.Model Msg
     , infiniteScroll : InfiniteScroll.Model Msg
     }
-
-
-stepCount : Int
-stepCount =
-    150
 
 
 loadMore : InfiniteScroll.Direction -> Cmd Msg
@@ -50,6 +73,7 @@ init =
     ( { icons = iconList
       , count = stepCount
       , filter = ""
+      , selectedCategory = allCategories
       , mdc = Material.defaultModel
       , infiniteScroll = InfiniteScroll.init loadMore
       }
@@ -59,13 +83,6 @@ init =
 
 
 ---- UPDATE ----
-
-
-type Msg
-    = Mdc (Material.Msg Msg)
-    | InfiniteScrollMsg InfiniteScroll.Msg
-    | LoadMore
-    | FilterChanged String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -95,9 +112,17 @@ update msg model =
               }
             , Cmd.none
             )
-        
+
         FilterChanged filter ->
             ( { model | filter = filter }, Cmd.none )
+
+        CategorySelected index ->
+            let
+                selected : ( String, String )
+                selected =
+                    Maybe.withDefault ( allCategories, "category" ) <| Array.get index (Array.fromList iconCategories)
+            in
+            ( { model | selectedCategory = Tuple.first selected }, Cmd.none )
 
 
 
@@ -108,39 +133,44 @@ view : Model -> Html Msg
 view model =
     div []
         [ topAppBar model
-        , gridContainer model
+        , div [ class "content" ] [ categoryListView model, iconListView model ]
         ]
 
 
-gridContainer : Model -> Html Msg
-gridContainer model =
+iconListView : Model -> Html Msg
+iconListView model =
     let
-        contains = String.contains (String.toUpper model.filter)
+        iconListFilter : List IconInfo -> List IconInfo
+        iconListFilter =
+            let
+                contains =
+                    String.contains (String.toUpper model.filter)
+
+                ofCategory icon =
+                    model.selectedCategory == allCategories || model.selectedCategory == icon.category
+            in
+            List.filter (\icon -> contains (String.toUpper icon.name) && ofCategory icon)
     in
     div
-        [ class "gridcontainer"
+        [ class "icon-list"
         , InfiniteScroll.infiniteScroll InfiniteScrollMsg
         ]
         (model.icons
-            |> List.filter (\icon -> contains (String.toUpper icon.name))
+            |> iconListFilter
             |> List.take model.count
-            |> List.map (viewIcon model))
+            |> List.map iconView
+        )
 
 
-viewIcon : Model -> IconInfo -> Html Msg
-viewIcon model icon =
+iconView : IconInfo -> Html Msg
+iconView icon =
     styled div
-        [ cs "iconview" ]
-        [ iconitem icon
+        [ cs "icon-view" ]
+        [ div [ class "icon-item" ] [ Icon.view [ Icon.size24 ] icon.name ]
         , Html.span [ style "font-size" "small" ] [ text icon.name ]
         , Html.b [ style "font-size" "small" ] [ text icon.function ]
         , Html.i [] [ text icon.category ]
         ]
-
-
-iconitem : IconInfo -> Html msg
-iconitem icon =
-    div [ class "iconitem" ] [ Icon.view [ Icon.size24 ] icon.name ]
 
 
 topAppBar : Model -> Html Msg
@@ -157,7 +187,7 @@ topAppBar model =
             [ TopAppBar.alignStart
             ]
             [ TopAppBar.navigationIcon Mdc (index ++ "-menu") model.mdc [] Icons.image_search
-            , TopAppBar.title [] [ text "Material Icon View" ]
+            , TopAppBar.title [] [ text "Material Icon Viewer" ]
             ]
         , TopAppBar.section
             [ TopAppBar.alignEnd
@@ -165,9 +195,46 @@ topAppBar model =
             [ TextField.view Mdc
                 (index ++ "-search")
                 model.mdc
-                (TextField.label "Search" :: Options.onInput FilterChanged :: TextField.trailingIcon Icons.search :: [])
+                [ TextField.label "Search"
+                , Options.onInput FilterChanged
+                , TextField.trailingIcon Icons.search
+                ]
                 []
             ]
+        ]
+
+
+categoryListView : Model -> Html Msg
+categoryListView model =
+    Drawer.view Mdc
+        "category-list-view"
+        model.mdc
+        []
+        [ Drawer.header
+            []
+            [ styled Html.h3
+                [ Drawer.title ]
+                [ text "Categories" ]
+            ]
+        , Drawer.content [ cs "category-list" ]
+            [ Lists.ul Mdc
+                "permanent-drawer-drawer-list"
+                model.mdc
+                [ Lists.singleSelection
+                , Lists.useActivated
+                , Lists.onSelectListItem CategorySelected
+                ]
+                (List.map categoryItemView iconCategories)
+            ]
+        ]
+
+
+categoryItemView : ( String, String ) -> Lists.ListItem Msg
+categoryItemView ( category, icon ) =
+    Lists.li
+        []
+        [ Lists.graphicIcon [] icon
+        , text category
         ]
 
 

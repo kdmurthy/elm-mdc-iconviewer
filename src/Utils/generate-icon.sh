@@ -75,7 +75,7 @@ EOF
 }
 
 cat <<EOF > IconList.elm
-module Utils.IconList exposing(..)
+module Utils.IconList exposing(IconInfo, iconList, iconCategories)
 
 import Utils.Icons as Icons
 
@@ -100,3 +100,22 @@ cat <<EOF  >> IconList.elm
         { name = Icons.info, function="info", category = "LastOne" }
     ]
 EOF
+
+# List of categories
+cat <<EOF >> IconList.elm
+
+iconCategories: List ( String, String )
+iconCategories =
+EOF
+
+echo "    [ ( \"All\", \"category\")" >> IconList.elm
+for i in ~/Projects/reference/material-design-icons/png/*
+do
+    category=$(basename $i | sed -e 's/./\U&/')
+	file=$(echo $i/* | awk '{ print $1 }')
+	iconstr=$(basename $file)
+	echo "    , (\"$category\", \"$iconstr\")" >> IconList.elm
+done
+
+echo "    ]" >> IconList.elm
+
