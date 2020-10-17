@@ -12,11 +12,13 @@
 body {
   overflow: hidden;
   margin: 0 auto;
-  padding-left: 15px;
 }
 
 div.gridcontainer {
-  margin: 1rem;
+  margin-top: 66px;
+  height: 90vh;
+  overflow-x: auto;
+  overflow-y: scroll;
   display: grid;
   grid-gap: 1rem;
   grid-template: repeat(auto-fit, 130px) / repeat(auto-fit, 130px) ;
