@@ -1,0 +1,15 @@
+{
+  "main.css": "/elm-mdc-iconviewer/static/css/main.6f48042f.chunk.css",
+  "main.js": "/elm-mdc-iconviewer/static/js/main.5cc5bdcc.chunk.js",
+  "main.js.map": "/elm-mdc-iconviewer/static/js/main.5cc5bdcc.chunk.js.map",
+  "runtime~main.js": "/elm-mdc-iconviewer/static/js/runtime~main.2b25e0b3.js",
+  "runtime~main.js.map": "/elm-mdc-iconviewer/static/js/runtime~main.2b25e0b3.js.map",
+  "vendors~main.js": "/elm-mdc-iconviewer/static/js/vendors~main.bb36eb2f.chunk.js",
+  "vendors~main.js.map": "/elm-mdc-iconviewer/static/js/vendors~main.bb36eb2f.chunk.js.map",
+  "./service-worker.js": "/elm-mdc-iconviewer/./service-worker.js",
+  "favicon.ico": "/elm-mdc-iconviewer/favicon.ico",
+  "index.html": "/elm-mdc-iconviewer/index.html",
+  "logo.svg": "/elm-mdc-iconviewer/logo.svg",
+  "manifest.json": "/elm-mdc-iconviewer/manifest.json",
+  "precache-manifest.b241b20f448c10fcff18c39793c334ba.js": "/elm-mdc-iconviewer/precache-manifest.b241b20f448c10fcff18c39793c334ba.js"
+}
